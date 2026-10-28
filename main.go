@@ -1,0 +1,132 @@
+package main
+
+import "fmt"
+
+// Ejercicio 1: intercambio de valores con punteros
+func swap(a *int, b *int) {
+	tmp := *a // tmp vive solo dentro de la función
+	*a = *b
+	*b = tmp
+}
+
+// Ejercicio 3: copia independiente con make y un ciclo
+func copyArray(values []int) []int {
+	result := make([]int, len(values))
+	for i := 0; i < len(values); i++ {
+		result[i] = values[i]
+	}
+	return result
+}
+
+// Ejercicio 4: ordenamiento por inserción
+func ordenarInsercion(values []int) {
+	for i := 1; i < len(values); i++ {
+		key := values[i]
+		j := i - 1
+		for j >= 0 && values[j] > key {
+			values[j+1] = values[j]
+			j--
+		}
+		values[j+1] = key
+	}
+}
+
+// Ejercicio 5: dos valores que suman un objetivo.
+func findPair(values []int, target int) bool {
+	left := 0
+	right := len(values) - 1
+	for left < right {
+		sum := values[left] + values[right]
+		if sum == target {
+			fmt.Printf("Un par válido es (%d, %d)\n", values[left], values[right])
+			return true
+		} else if sum < target {
+			left++
+		} else {
+			right--
+		}
+	}
+	return false
+}
+
+func probarPar(values []int, target int) {
+	if !findPair(values, target) {
+		fmt.Println("No existe")
+	}
+}
+
+// Ejercicio 6: 3Sum sin duplicados, sobre una copia ordenada
+func threeSum(values []int) int {
+	n := len(values)
+	if n < 3 {
+		return 0
+	}
+
+	s := copyArray(values)
+	ordenarInsercion(s)
+
+	count := 0
+	for i := 0; i < n-2; i++ {
+		if i > 0 && s[i] == s[i-1] {
+			continue
+		}
+		left := i + 1
+		right := n - 1
+		for left < right {
+			sum := s[i] + s[left] + s[right]
+			if sum < 0 {
+				left++
+			} else if sum > 0 {
+				right--
+			} else {
+				fmt.Printf("Terna: (%d, %d, %d)\n", s[i], s[left], s[right])
+				count++
+				left++
+				right--
+				// Saltar repetidos del lado izquierdo y derecho
+				for left < right && s[left] == s[left-1] {
+					left++
+				}
+				for left < right && s[right] == s[right+1] {
+					right--
+				}
+			}
+		}
+	}
+	return count
+}
+
+func main() {
+	values := []int{4, -2, 0, 7, -5}
+	fmt.Println("Entrada:", values)
+
+	// Ejercicio 1
+	a, b := 8, -3
+	fmt.Println("Ejercicio 1 antes:", a, b)
+	swap(&a, &b)
+	fmt.Println("Ejercicio 1 después:", a, b)
+
+	// Ejercicio 3
+	original := []int{4, -2, 0, 7, -5}
+	cp := copyArray(original)
+	cp[0] = 99
+	fmt.Println("Ejercicio 3 original:", original)
+	fmt.Println("Ejercicio 3 copia:", cp)
+
+	// Ejercicio 5
+	fmt.Println("Ejercicio 5, objetivo 1:")
+	probarPar([]int{-4, -1, 0, 2, 5}, 1)
+	fmt.Println("Ejercicio 5, objetivo 8:")
+	probarPar([]int{-4, -1, 0, 2, 5}, 8)
+	fmt.Println("Ejercicio 5, [0, 0] objetivo 0:")
+	probarPar([]int{0, 0}, 0)
+	fmt.Println("Ejercicio 5, [3] objetivo 6:")
+	probarPar([]int{3}, 6)
+
+	// Ejercicio 6
+	fmt.Println("3Sum [-1, 0, 1, 2, -1, -4]:", threeSum([]int{-1, 0, 1, 2, -1, -4}))
+	fmt.Println("3Sum [0, 1, 1]:", threeSum([]int{0, 1, 1}))
+	fmt.Println("3Sum [0, 0, 0]:", threeSum([]int{0, 0, 0}))
+	fmt.Println("3Sum [0, 0, 0, 0]:", threeSum([]int{0, 0, 0, 0}))
+	fmt.Println("3Sum [-2, 0, 0, 2, 2]:", threeSum([]int{-2, 0, 0, 2, 2}))
+}
