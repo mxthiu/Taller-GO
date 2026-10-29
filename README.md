@@ -115,7 +115,7 @@ En cada una de las posiciones el agua queda limitada por la pared más baja entr
 
 ## Alcance de variables
 
-En main.go, la variable tmp dentro de swap solo existe mientras la función corre. Cuando swap termina, tmp desaparece, así que no hay problema si otra función también usa un nombre tmp.
+En ejercicio1.go, la variable tmp dentro de swap solo existe mientras la función corre. Cuando swap termina, tmp desaparece, así que no hay problema si otra función también usa un nombre tmp.
 
 Otro ejemplo está en threeSum. Las variables left y right se declaran dentro del for de i, así que cada vuelta empieza con sus propios punteros nuevos.
 
